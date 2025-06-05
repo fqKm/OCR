@@ -1,0 +1,10 @@
+streamlit
+pytesseract
+Pillow
+easyocr
+torch
+torchvision
+transformers
+numpy
+jiwer
+accelerate

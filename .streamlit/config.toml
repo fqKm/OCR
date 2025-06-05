@@ -1,0 +1,2 @@
+[server]
+folderWatchExclusions = ["**/*.pyc", "**/_torch_docs/", "**/torch/"]
