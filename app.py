@@ -67,9 +67,9 @@ if uploaded_file is not None:
         elif model_choice == "Tesseract":
             with st.spinner("Melakukan OCR dengan Tesseract..."):
                 predicted_text = ocr_tesseract(image)
-        elif model_choice == "GOTOCR":
-            with st.spinner("Melakukan OCR dengan GOTOCR..."):
-                predicted_text = ocr_gotocr(image)
+        # elif model_choice == "GOTOCR":
+        #     with st.spinner("Melakukan OCR dengan GOTOCR..."):
+        #         predicted_text = ocr_gotocr(image)
     except Exception as e:
         predicted_text = f"Terjadi kesalahan: {e}"
 
