@@ -7,11 +7,13 @@ import numpy as np
 from transformers import AutoProcessor, AutoModelForImageTextToText
 import time
 
+device = "cpu"
+
 def ocr_tesseract(image):
     return pytesseract.image_to_string(image)
 
 def load_easyocr_reader():
-    return easyocr.Reader(['en','id'], gpu=torch.cuda.is_available())
+    return easyocr.Reader(['en','id'], gpu=False)
 
 def ocr_easyocr(image):
     reader = load_easyocr_reader()
@@ -20,10 +22,9 @@ def ocr_easyocr(image):
     return ' '.join(result)
 
 def load_gotocr_model_processor():
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    model = AutoModelForImageTextToText.from_pretrained("stepfun-ai/GOT-OCR-2.0-hf", device_map=device)
+    model = AutoModelForImageTextToText.from_pretrained("stepfun-ai/GOT-OCR-2.0-hf").to(device)
     processor = AutoProcessor.from_pretrained("stepfun-ai/GOT-OCR-2.0-hf")
-    return model, processor, device
+    return model, processor
 
 def ocr_gotocr(image):
     model, processor, device = load_gotocr_model_processor()
@@ -54,7 +55,7 @@ predicted_text = ""
 execution_time = 0.0
 
 if uploaded_file is not None:
-    image = Image.open(uploaded_file).convert("RGB")
+    image = Image.open(uploaded_file).convert("L")
     st.image(image, caption="Gambar yang Diunggah", use_column_width=True)
 
     st.subheader("Hasil Prediksi Teks")
@@ -67,9 +68,9 @@ if uploaded_file is not None:
         elif model_choice == "Tesseract":
             with st.spinner("Melakukan OCR dengan Tesseract..."):
                 predicted_text = ocr_tesseract(image)
-        # elif model_choice == "GOTOCR":
-        #     with st.spinner("Melakukan OCR dengan GOTOCR..."):
-        #         predicted_text = ocr_gotocr(image)
+        elif model_choice == "GOTOCR":
+            with st.spinner("Melakukan OCR dengan GOTOCR..."):
+                predicted_text = ocr_gotocr(image)
     except Exception as e:
         predicted_text = f"Terjadi kesalahan: {e}"
 
