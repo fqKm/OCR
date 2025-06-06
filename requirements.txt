@@ -1,10 +1,11 @@
-streamlit
+streamlit>=1.32
 pytesseract
 Pillow
 easyocr
-torch
+torch==2.2.0
 torchvision
 transformers
 numpy
 jiwer
 accelerate
+sentencepiece
