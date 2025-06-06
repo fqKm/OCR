@@ -27,7 +27,7 @@ def load_gotocr_model_processor():
     return model, processor
 
 def ocr_gotocr(image):
-    model, processor, device = load_gotocr_model_processor()
+    model, processor= load_gotocr_model_processor()
     inputs = processor(image, return_tensors="pt").to(device)
     generate_ids = model.generate(
         **inputs,
