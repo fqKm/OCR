@@ -32,8 +32,8 @@ def ocr_gotocr(image):
     generate_ids = model.generate(
         **inputs,
         do_sample=False,
-        tokenizer=processor,
-        stop_strings="<|im_end|>",
+        tokenizer=processor.tokenizer,
+        stop_strings=["<|im_end|>"],
         max_new_tokens=4096,
     )
     generated_text = processor.decode(generate_ids[0, inputs["input_ids"].shape[1]:], skip_special_tokens=True)
