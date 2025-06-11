@@ -21,24 +21,6 @@ def ocr_easyocr(image):
     result = reader.readtext(image_np, detail=0)
     return ' '.join(result)
 
-def load_gotocr_model_processor():
-    model = AutoModelForImageTextToText.from_pretrained("stepfun-ai/GOT-OCR-2.0-hf").to(device)
-    processor = AutoProcessor.from_pretrained("stepfun-ai/GOT-OCR-2.0-hf")
-    return model, processor
-
-def ocr_gotocr(image):
-    model, processor= load_gotocr_model_processor()
-    inputs = processor(image, return_tensors="pt").to(device)
-    generate_ids = model.generate(
-        **inputs,
-        do_sample=False,
-        tokenizer=processor.tokenizer,
-        stop_strings=["<|im_end|>"],
-        max_new_tokens=4096,
-    )
-    generated_text = processor.decode(generate_ids[0, inputs["input_ids"].shape[1]:], skip_special_tokens=True)
-    return generated_text
-
 st.set_page_config(page_title="Aplikasi OCR Sederhana", layout="centered")
 
 st.title("Aplikasi OCR Sederhana")
@@ -48,7 +30,7 @@ uploaded_file = st.file_uploader("Unggah Gambar Teks", type=["png", "jpg", "jpeg
 
 model_choice = st.selectbox(
     "Pilih Model OCR",
-    ("EasyOCR", "Tesseract", "GOTOCR")
+    ("EasyOCR", "Tesseract")
 )
 
 predicted_text = ""
@@ -68,9 +50,6 @@ if uploaded_file is not None:
         elif model_choice == "Tesseract":
             with st.spinner("Melakukan OCR dengan Tesseract..."):
                 predicted_text = ocr_tesseract(image)
-        elif model_choice == "GOTOCR":
-            with st.spinner("Melakukan OCR dengan GOTOCR..."):
-                predicted_text = ocr_gotocr(image)
     except Exception as e:
         predicted_text = f"Terjadi kesalahan: {e}"
 
